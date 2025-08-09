@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍎 Fruit Classification using CNN 🍌</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: #f0f0f0;
+            font-size: 1.2em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        .button-section {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            min-width: 200px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .upload-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .file-input {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            background: linear-gradient(45deg, #43cea2, #185a9d);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: inline-block;
+        }
+
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.3);
+        }
+
+        .camera-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #live-video {
+            border: 4px solid #667eea;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 100%;
+            height: auto;
+            display: none;
+            margin: 20px 0;
+        }
+
+        .status-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .status-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .status-content {
+            font-size: 1.1em;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-content {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        #uploaded-image {
+            max-width: 300px;
+            max-height: 300px;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 20px auto;
+            display: block;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .button-section {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍎 Fruit Classification using CNN 🍌</h1>
+        <p>Advanced AI-powered fresh vs rotten fruit detection</p>
+    </div>
+
+    <div class="container">
+        <!-- Main Buttons -->
+        <div class="button-section">
+            <button id="start-camera-btn" class="btn" onclick="startCamera()">
+                📹 Start Live Camera
+            </button>
+            <button id="stop-camera-btn" class="btn hidden" onclick="stopCamera()">
+                ⏹️ Stop Camera
+            </button>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="file-input" class="file-input" accept="image/*" onchange="handleFileUpload()">
+                <label for="file-input" class="file-input-label">
+                    📤 Upload Fruit Image
+                </label>
+            </div>
+        </div>
+
+        <!-- Camera Feed -->
+        <div class="camera-section">
+            <img id="live-video" src="" alt="Live Camera Feed" />
+        </div>
+
+        <!-- Live Status -->
+        <div class="status-section">
+            <div class="status-title">🔍 Live Detection Status</div>
+            <div class="status-content" id="live-status">
+                Camera not started
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="result-section">
+            <div class="result-title">🎯 Classification Result</div>
+            <div class="result-content" id="result-display">
+                No prediction yet
+            </div>
+        </div>
+
+        <!-- Uploaded Image Display -->
+        <img id="uploaded-image" src="" alt="Uploaded Image" class="hidden" />
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <p><strong>Live Camera:</strong> Show fruit to camera for 4 seconds. System will capture both sides automatically.</p>
+            <p><strong>Upload Image:</strong> Upload any fruit image from the 10 supported classes for instant classification.</p>
+            <p><strong>Supported Fruits:</strong> Apples, Bananas, Mangoes, Oranges, Tomatoes (Fresh & Rotten variants)</p>
+        </div>
+    </div>
+
+    <script>
+        let cameraActive = false;
+        let statusUpdateInterval = null;
+
+        function startCamera() {
+            document.getElementById('live-video').src = '/video_feed';
+            document.getElementById('live-video').style.display = 'block';
+            document.getElementById('start-camera-btn').classList.add('hidden');
+            document.getElementById('stop-camera-btn').classList.remove('hidden');
+            
+            cameraActive = true;
+            updateLiveStatus();
+            
+            // Start status updates
+            statusUpdateInterval = setInterval(updateCameraStatus, 1000);
+        }
+
+        function stopCamera() {
+            document.getElementById('live-video').src = '';
+            document.getElementById('live-video').style.display = 'none';
+            document.getElementById('start-camera-btn').classList.remove('hidden');
+            document.getElementById('stop-camera-btn').classList.add('hidden');
+            
+            cameraActive = false;
+            document.getElementById('live-status').innerHTML = 'Camera stopped';
+            
+            // Stop status updates
+            if (statusUpdateInterval) {
+                clearInterval(statusUpdateInterval);
+                statusUpdateInterval = null;
+            }
+        }
+
+        function updateLiveStatus() {
+            if (cameraActive) {
+                document.getElementById('live-status').innerHTML = 'Camera active - Show fruit for detection <span class="loading"></span>';
+            }
+        }
+
+        function updateCameraStatus() {
+            if (!cameraActive) return;
+            
+            fetch('/camera_status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusElement = document.getElementById('live-status');
+                    const resultElement = document.getElementById('result-display');
+                    
+                    if (data.timer_active) {
+                        if (!data.frame1_captured) {
+                            statusElement.innerHTML = '📸 Capturing side 1... <span class="loading"></span>';
+                        } else if (!data.frame2_captured) {
+                            statusElement.innerHTML = '🔄 Flip fruit! Capturing side 2... <span class="loading"></span>';
+                        } else {
+                            statusElement.innerHTML = '🧠 Analyzing both sides... <span class="loading"></span>';
+                        }
+                    } else {
+                        statusElement.innerHTML = '👁️ Scanning for fruits...';
+                    }
+                    
+                    // Update result
+                    if (data.prediction && data.prediction !== 'No fruit detected') {
+                        resultElement.innerHTML = data.prediction;
+                    }
+                })
+                .catch(error => {
+                    console.error('Status update error:', error);
+                });
+        }
+
+        async function handleFileUpload() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            // Show loading
+            document.getElementById('result-display').innerHTML = 'Analyzing uploaded image... <span class="loading"></span>';
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    document.getElementById('result-display').innerHTML = `Error: ${result.error}`;
+                } else {
+                    document.getElementById('result-display').innerHTML = 
+                        `${result.prediction}<br><small>Confidence: ${result.confidence}</small>`;
+                    
+                    // Show uploaded image
+                    const uploadedImg = document.getElementById('uploaded-image');
+                    uploadedImg.src = result.image_url + '?t=' + new Date().getTime();
+                    uploadedImg.classList.remove('hidden');
+                }
+            } catch (error) {
+                document.getElementById('result-display').innerHTML = 'Upload failed. Please try again.';
+                console.error('Upload error:', error);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLiveStatus();
+        });
+    </script>
+</body>
+</html>
