@@ -13,7 +13,7 @@ Supported 10 classes:
 7. rottenbanana  
 8. rottenmango  
 9. rottenoranges
- 10. rottentomato  
+10. rottentomato  
 
 ## 🛠 How to Set Up and Run
 Follow these steps in order:
