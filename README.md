@@ -2,7 +2,7 @@
 
 This project uses a trained EfficientNet-B0 deep learning model to classify fruits as fresh or rotten. It works in real-time via your laptop camera or by uploading fruit images.
 
-Supported **10 classes**:
+Supported 10 classes:
 
 1. freshapples  
 2. freshbanana  
@@ -12,8 +12,8 @@ Supported **10 classes**:
 6. rottenapples  
 7. rottenbanana  
 8. rottenmango  
-9. rottenoranges  
-10. rottentomato  
+9. rottenoranges
+ 10. rottentomato  
 
 ## 🛠 How to Set Up and Run
 Follow these steps in order:
