@@ -1,7 +1,6 @@
 # 🍎 Fruit Freshness Classification using EfficientNet-B0
 
-This project uses a trained **EfficientNet-B0** deep learning model to classify fruits as **fresh** or **rotten**.  
-It works in **real-time via your laptop camera** or by **uploading fruit images**.
+This project uses a trained EfficientNet-B0 deep learning model to classify fruits as fresh or rotten. It works in real-time via your laptop camera or by uploading fruit images.
 
 Supported **10 classes**:
 
@@ -16,10 +15,7 @@ Supported **10 classes**:
 9. rottenoranges  
 10. rottentomato  
 
----
-
 ## 🛠 How to Set Up and Run
-
 Follow these steps in order:
 
 ### 1. Download and Extract
